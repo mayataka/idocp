@@ -1,0 +1,11 @@
+<map id="idocp::CostFunctionComponentBase" name="idocp::CostFunctionComponentBase">
+<area shape="rect" id="node1" title="Base class of components of cost function." alt="" coords="5,187,237,213"/>
+<area shape="rect" id="node2" href="$classidocp_1_1_configuration_space_cost.html" title=" " alt="" coords="289,5,488,32"/>
+<area shape="rect" id="node3" href="$classidocp_1_1_contact_force_cost.html" title=" " alt="" coords="307,56,471,83"/>
+<area shape="rect" id="node4" href="$classidocp_1_1_task_space3_d_cost.html" title=" " alt="" coords="305,107,473,133"/>
+<area shape="rect" id="node5" href="$classidocp_1_1_task_space6_d_cost.html" title=" " alt="" coords="305,157,473,184"/>
+<area shape="rect" id="node6" href="$classidocp_1_1_time_varying_configuration_space_cost.html" title=" " alt="" coords="285,209,492,250"/>
+<area shape="rect" id="node7" href="$classidocp_1_1_time_varying_task_space3_d_cost.html" title=" " alt="" coords="287,274,491,315"/>
+<area shape="rect" id="node8" href="$classidocp_1_1_time_varying_task_space6_d_cost.html" title=" " alt="" coords="287,339,491,381"/>
+<area shape="rect" id="node9" href="$classidocp_1_1_trotting_configuration_space_cost.html" title=" " alt="" coords="299,405,478,446"/>
+</map>

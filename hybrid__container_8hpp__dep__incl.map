@@ -1,0 +1,17 @@
+<map id="/github/workspace/include/idocp/hybrid/hybrid_container.hpp" name="/github/workspace/include/idocp/hybrid/hybrid_container.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="543,5,761,47"/>
+<area shape="rect" id="node2" href="$line__search_8hpp.html" title=" " alt="" coords="504,95,677,151"/>
+<area shape="rect" id="node3" href="$ocp__solver_8hpp.html" title=" " alt="" coords="692,206,865,247"/>
+<area shape="rect" id="node4" href="$parnmpc__solver_8hpp.html" title=" " alt="" coords="151,206,353,247"/>
+<area shape="rect" id="node5" href="$backward__correction__solver_8hpp.html" title=" " alt="" coords="30,95,237,151"/>
+<area shape="rect" id="node6" href="$ocp__linearizer_8hpp.html" title=" " alt="" coords="957,102,1147,143"/>
+<area shape="rect" id="node8" href="$parnmpc__linearizer_8hpp.html" title=" " alt="" coords="261,102,480,143"/>
+<area shape="rect" id="node9" href="$riccati__recursion__solver_8hpp.html" title=" " alt="" coords="752,95,933,151"/>
+<area shape="rect" id="node10" href="$unconstrained__container_8hpp.html" title=" " alt="" coords="1315,95,1496,151"/>
+<area shape="rect" id="node7" href="$ocp__linearizer_8hxx.html" title=" " alt="" coords="959,206,1145,247"/>
+<area shape="rect" id="node11" href="$unline__search_8hpp.html" title=" " alt="" coords="1417,199,1591,255"/>
+<area shape="rect" id="node12" href="$unocp__solver_8hpp.html" title=" " alt="" coords="1206,310,1407,351"/>
+<area shape="rect" id="node13" href="$unparnmpc__solver_8hpp.html" title=" " alt="" coords="1541,303,1715,359"/>
+<area shape="rect" id="node14" href="$unbackward__correction_8hpp.html" title=" " alt="" coords="1665,199,1839,255"/>
+<area shape="rect" id="node15" href="$unriccati__recursion_8hpp.html" title=" " alt="" coords="1220,199,1393,255"/>
+</map>
