@@ -17,6 +17,8 @@ Robot::Robot(const std::string& path_to_urdf)
     dimv_(0),
     dimu_(0),
     max_dimf_(0),
+    baumgarte_weight_on_velocity_(0), 
+    baumgarte_weight_on_position_(0),
     dimpulse_dv_(),
     joint_effort_limit_(),
     joint_velocity_limit_(),
@@ -53,6 +55,8 @@ Robot::Robot(const std::string& path_to_urdf,
     dimv_(0),
     dimu_(0),
     max_dimf_(0),
+    baumgarte_weight_on_velocity_(0), 
+    baumgarte_weight_on_position_(0),
     dimpulse_dv_(),
     joint_effort_limit_(),
     joint_velocity_limit_(),
@@ -96,6 +100,8 @@ Robot::Robot()
     dimv_(0),
     dimu_(0),
     max_dimf_(0),
+    baumgarte_weight_on_velocity_(0), 
+    baumgarte_weight_on_position_(0),
     dimpulse_dv_(),
     joint_effort_limit_(),
     joint_velocity_limit_(),
@@ -190,6 +196,15 @@ void Robot::printRobotModel() const {
   std::cout << "upperPositionLimit = [" << model_.upperPositionLimit.transpose() 
             << "]" << std::endl;
   std::cout << "--------------------------------------- " << std::endl;
+}
+
+
+void Robot::setBaumgarteWeights(const double baumgarte_weight_on_velocity, 
+                                const double baumgarte_weight_on_position) {
+  assert(baumgarte_weight_on_velocity >= 0);
+  assert(baumgarte_weight_on_position >= 0);
+  baumgarte_weight_on_velocity_ = baumgarte_weight_on_velocity;
+  baumgarte_weight_on_position_ = baumgarte_weight_on_position;
 }
 
 } // namespace idocp 

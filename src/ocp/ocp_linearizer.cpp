@@ -113,8 +113,6 @@ double OCPLinearizer::KKTError(const OCP& ocp,
     }
     else if (i < N+1+N_impulse) {
       const int impulse_index  = i - (N+1);
-      const int time_stage_before_impulse 
-          = ocp.discrete().timeStageBeforeImpulse(impulse_index);
       kkt_error_.coeffRef(i) 
           = ocp.impulse[impulse_index].squaredNormKKTResidual(
               kkt_residual.impulse[impulse_index]);

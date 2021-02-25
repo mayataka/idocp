@@ -191,6 +191,11 @@ inline double ImpulseSplitOCP::constraintViolation(
   return violation;
 }
 
+
+inline void ImpulseSplitOCP::setPenalty(const double p) {
+  impulse_dynamics_.set_penalty(p);
+}
+
 } // namespace idocp
 
 #endif // IDOCP_IMPULSE_SPLIT_OCP_HXX_ 

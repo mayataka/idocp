@@ -19,6 +19,8 @@ inline ImpulseDynamicsForwardEulerData::ImpulseDynamicsForwardEulerData(
     ImDC_full_(Eigen::VectorXd::Zero(robot.dimv()+robot.max_dimf())),
     MJtJinv_ImDC_full_(Eigen::VectorXd::Zero(robot.dimv()+robot.max_dimf())),
     ldvf_full_(Eigen::VectorXd::Zero(robot.dimv()+robot.max_dimf())),
+    Pq_full_(Eigen::MatrixXd::Zero(robot.max_dimf(), robot.dimv())),
+    P_full_(Eigen::VectorXd::Zero(robot.max_dimf())),
     dimv_(robot.dimv()),
     dimf_(0),
     dimvf_(robot.dimv()) {
@@ -34,6 +36,8 @@ inline ImpulseDynamicsForwardEulerData::ImpulseDynamicsForwardEulerData()
     ImDC_full_(),
     MJtJinv_ImDC_full_(),
     ldvf_full_(),
+    Pq_full_(),
+    P_full_(),
     dimv_(0),
     dimf_(0),
     dimvf_(0) {
@@ -227,6 +231,29 @@ ImpulseDynamicsForwardEulerData::lf() {
 inline const Eigen::VectorBlock<const Eigen::VectorXd> 
 ImpulseDynamicsForwardEulerData::lf() const {
   return ldvf_full_.segment(dimv_, dimf_);
+}
+
+
+inline Eigen::Block<Eigen::MatrixXd> ImpulseDynamicsForwardEulerData::Pq() {
+  return Pq_full_.topLeftCorner(dimf_, dimv_);
+}
+
+
+inline const Eigen::Block<const Eigen::MatrixXd> 
+ImpulseDynamicsForwardEulerData::Pq() const {
+  return Pq_full_.topLeftCorner(dimf_, dimv_);
+}
+
+
+inline Eigen::VectorBlock<Eigen::VectorXd> 
+ImpulseDynamicsForwardEulerData::P() {
+  return P_full_.head(dimf_);
+}
+
+
+inline const Eigen::VectorBlock<const Eigen::VectorXd> 
+ImpulseDynamicsForwardEulerData::P() const {
+  return P_full_.head(dimf_);
 }
 
 } // namespace idocp 

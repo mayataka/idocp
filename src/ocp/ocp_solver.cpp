@@ -285,19 +285,24 @@ void OCPSolver::showInfo() const {
 }
 
 
+void OCPSolver::setPenalty(const double p) {
+  for (auto& e : ocp_.impulse) { 
+    e.setPenalty(p); 
+  }
+}
+
+
 void OCPSolver::discretizeSolution() {
   for (int i=0; i<=ocp_.discrete().N(); ++i) {
     s_[i].setContactStatus(
         contact_sequence_.contactStatus(ocp_.discrete().contactPhase(i)));
     s_[i].set_f_stack();
-    s_[i].setImpulseStatus();
   }
   for (int i=0; i<ocp_.discrete().N_lift(); ++i) {
     s_.lift[i].setContactStatus(
         contact_sequence_.contactStatus(
             ocp_.discrete().contactPhaseAfterLift(i)));
     s_.lift[i].set_f_stack();
-    s_.lift[i].setImpulseStatus();
   }
   for (int i=0; i<ocp_.discrete().N_impulse(); ++i) {
     s_.impulse[i].setImpulseStatus(contact_sequence_.impulseStatus(i));
@@ -306,17 +311,6 @@ void OCPSolver::discretizeSolution() {
         contact_sequence_.contactStatus(
             ocp_.discrete().contactPhaseAfterImpulse(i)));
     s_.aux[i].set_f_stack();
-    const int time_stage_before_impulse 
-        = ocp_.discrete().timeStageBeforeImpulse(i);
-    if (ocp_.discrete().isTimeStageAfterLift(time_stage_before_impulse)) {
-      const int lift_index 
-          = ocp_.discrete().liftIndexAfterTimeStage(time_stage_before_impulse-1);
-      s_.lift[lift_index].setImpulseStatus(contact_sequence_.impulseStatus(i));
-    }
-    else if (time_stage_before_impulse > 0) {
-      s_[time_stage_before_impulse-1].setImpulseStatus(
-          contact_sequence_.impulseStatus(i));
-    }
   }
 }
 

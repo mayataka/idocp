@@ -216,6 +216,8 @@ public:
                              const Eigen::VectorXd& v_next,
                              ImpulseSplitKKTResidual& kkt_residual);
 
+  void setPenalty(const double p);
+
 private:
   std::shared_ptr<CostFunction> cost_;
   CostFunctionData cost_data_;

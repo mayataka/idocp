@@ -30,6 +30,10 @@ int main(int argc, char *argv[]) {
   std::vector<int> contact_frames = {14, 24, 34, 44}; // LF, LH, RF, RH
   const std::string path_to_urdf = "../anymal_b_simple_description/urdf/anymal.urdf";
   idocp::Robot robot(path_to_urdf, contact_frames);
+  const double baum = 1.55 / 30;
+  const double alpha = 2 / baum;
+  const double beta = 1 / (baum*baum);
+  robot.setBaumgarteWeights(alpha, beta);
 
   const double step_length = 0.15;
   const double t_start = 0.5;
@@ -191,6 +195,9 @@ int main(int argc, char *argv[]) {
   ocp_solver.setSolution("f", f_init);
 
   ocp_solver.initConstraints(t);
+
+  ocp_solver.setPenalty(1.0e02);
+
 
   const bool line_search = false;
   idocp::ocpbenchmarker::Convergence(ocp_solver, t, q, v, 25, line_search);

@@ -16,7 +16,7 @@ namespace idocp {
 
 class ImpulseDynamicsForwardEuler {
 public:
-  ImpulseDynamicsForwardEuler(const Robot& robot);
+  ImpulseDynamicsForwardEuler(const Robot& robot, const double p=1.0e07);
 
   ImpulseDynamicsForwardEuler();
 
@@ -45,6 +45,10 @@ public:
   static void linearizeImpulseVelocityConstraint(
       Robot& robot, const ImpulseStatus& impulse_status, 
       ImpulseDynamicsForwardEulerData& data);
+
+  void linearizeSwitchingConstraints(
+      Robot& robot, const ImpulseStatus& impulse_status,
+      ImpulseSplitKKTResidual& kkt_residual);
 
   void condenseImpulseDynamics(Robot& robot, 
                                const ImpulseStatus& impulse_status,
@@ -84,14 +88,26 @@ public:
                                       const ImpulseSplitSolution& s, 
                                       ImpulseSplitKKTResidual& kkt_residual);
 
+  void computeSwitchingConstraintsResidual(Robot& robot, 
+                                           const ImpulseStatus& impulse_status);
+
   double l1NormImpulseDynamicsResidual(
       const ImpulseSplitKKTResidual& kkt_residual) const;
 
   double squaredNormImpulseDynamicsResidual(
       const ImpulseSplitKKTResidual& kkt_residual) const;
 
+  double l1NormSwitchingConstraintsResidual() const;
+
+  double squaredNormSwitchingConstraintsResidual() const;
+
+  void set_penalty(const double penalty);
+
+  double get_penalty() const;
+
 private:
   ImpulseDynamicsForwardEulerData data_;
+  double p_;
 
   void setImpulseStatus(const ImpulseStatus& impulse_status);
 

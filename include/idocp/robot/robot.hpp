@@ -684,6 +684,9 @@ public:
 
   double totalWeight() const;
 
+  void setBaumgarteWeights(const double baumgarte_weight_on_velocity, 
+                           const double baumgarte_weight_on_position);
+
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
@@ -693,6 +696,7 @@ private:
   std::vector<PointContact> point_contacts_;
   pinocchio::container::aligned_vector<pinocchio::Force> fjoint_;
   int dimq_, dimv_, dimu_, max_dimf_, dimf_, num_active_contacts_;
+  double baumgarte_weight_on_velocity_, baumgarte_weight_on_position_;
   bool has_active_contacts_;
   std::vector<bool> is_each_contact_active_;
   Eigen::MatrixXd dimpulse_dv_; /// @brief used in RNEAImpulseDerivatives

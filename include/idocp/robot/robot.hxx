@@ -244,7 +244,9 @@ inline void Robot::computeBaumgarteResidual(
   for (int i=0; i<point_contacts_.size(); ++i) {
     if (contact_status.isContactActive(i)) {
       point_contacts_[i].computeBaumgarteResidual(
-          model_, data_, time_step, contact_points[i],
+          model_, data_, 
+          baumgarte_weight_on_velocity_, baumgarte_weight_on_position_, 
+          contact_points[i],
           (const_cast<Eigen::MatrixBase<VectorType>&>(baumgarte_residual))
               .template segment<3>(3*num_active_contacts));
       ++num_active_contacts;
@@ -266,7 +268,8 @@ inline void Robot::computeBaumgarteDerivatives(
   for (int i=0; i<point_contacts_.size(); ++i) {
     if (contact_status.isContactActive(i)) {
       point_contacts_[i].computeBaumgarteDerivatives(
-          model_, data_, time_step,
+          model_, data_, 
+          baumgarte_weight_on_velocity_, baumgarte_weight_on_position_,
           (const_cast<Eigen::MatrixBase<MatrixType1>&>(baumgarte_partial_dq))
               .block(3*num_active_contacts, 0, 3, dimv_),
           (const_cast<Eigen::MatrixBase<MatrixType2>&>(baumgarte_partial_dv))

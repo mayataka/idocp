@@ -117,7 +117,8 @@ public:
   /// Baumgarte's stabilization method.  
   /// @param[in] model Pinocchio model of the robot.
   /// @param[in] data Pinocchio data of the robot kinematics.
-  /// @param[in] time_step Time step of the discretization. Must be positive.
+  /// @param[in] baumgarte_weight_on_velocity 
+  /// @param[in] baumgarte_weight_on_position
   /// @param[in] contact_point Contact point. Size must be 3.
   /// @param[out] baumgarte_residual Residual of the Bamgarte's constraint. 
   /// Size must be 3.
@@ -125,7 +126,8 @@ public:
   template <typename VectorType1, typename VectorType2>
   void computeBaumgarteResidual(
       const pinocchio::Model& model, const pinocchio::Data& data, 
-      const double time_step,
+      const double baumgarte_weight_on_velocity,
+      const double baumgarte_weight_on_position,
       const Eigen::MatrixBase<VectorType1>& contact_point,
       const Eigen::MatrixBase<VectorType2>& baumgarte_residual) const;
 
@@ -136,7 +138,8 @@ public:
   /// pinocchio::Data.
   /// @param[in] model Pinocchio model of the robot.
   /// @param[in] data Pinocchio data of the robot kinematics.
-  /// @param[in] time_step Time step of the discretization. Must be positive.
+  /// @param[in] baumgarte_weight_on_velocity 
+  /// @param[in] baumgarte_weight_on_position
   /// @param[out] baumgarte_partial_dq The result of the partial derivative  
   /// with respect to the configuaration. Size must be 3 x Robot::dimv().
   /// @param[out] baumgarte_partial_dv The result of the partial derivative  
@@ -147,7 +150,8 @@ public:
   template <typename MatrixType1, typename MatrixType2, typename MatrixType3>
   void computeBaumgarteDerivatives(
       const pinocchio::Model& model, pinocchio::Data& data, 
-      const double time_step,
+      const double baumgarte_weight_on_velocity,
+      const double baumgarte_weight_on_position,
       const Eigen::MatrixBase<MatrixType1>& baumgarte_partial_dq, 
       const Eigen::MatrixBase<MatrixType2>& baumgarte_partial_dv, 
       const Eigen::MatrixBase<MatrixType3>& baumgarte_partial_da);

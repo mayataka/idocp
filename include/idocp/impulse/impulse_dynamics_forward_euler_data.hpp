@@ -92,10 +92,20 @@ public:
 
   const Eigen::VectorBlock<const Eigen::VectorXd> lf() const;
 
+  Eigen::Block<Eigen::MatrixXd> Pq();
+
+  const Eigen::Block<const Eigen::MatrixXd> Pq() const;
+
+  Eigen::VectorBlock<Eigen::VectorXd> P();
+
+  const Eigen::VectorBlock<const Eigen::VectorXd> P() const;
+
 private:
   Eigen::MatrixXd dImDCdqv_full_, dCddv_full_, MJtJinv_full_, 
                   MJtJinv_dImDCdqv_full_, Qdvfqv_full_;
   Eigen::VectorXd ImDC_full_, MJtJinv_ImDC_full_, ldvf_full_;
+  Eigen::MatrixXd Pq_full_;
+  Eigen::VectorXd P_full_;
   int dimv_, dimf_, dimvf_;
 
 };
