@@ -199,7 +199,7 @@ if (TESTING)
       target_link_libraries(coverage_config INTERFACE --coverage)
     endif()
   endif()
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
+  # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 endif() # end if (TESTING)
 
 #############

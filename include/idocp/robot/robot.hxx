@@ -200,6 +200,7 @@ inline void Robot::updateKinematics(
   pinocchio::forwardKinematics(model_, data_, q, v, a);
   pinocchio::updateFramePlacements(model_, data_);
   pinocchio::computeForwardKinematicsDerivatives(model_, data_, q, v, a);
+  pinocchio::jacobianCenterOfMass(model_, data_, false);
 }
 
 
@@ -213,6 +214,7 @@ inline void Robot::updateKinematics(
   pinocchio::updateFramePlacements(model_, data_);
   pinocchio::computeForwardKinematicsDerivatives(model_, data_, q, v, 
                                                  Eigen::VectorXd::Zero(dimv_));
+  pinocchio::jacobianCenterOfMass(model_, data_, false);
 }
 
 
@@ -222,6 +224,7 @@ inline void Robot::updateKinematics(
   assert(q.size() == dimq_);
   pinocchio::framesForwardKinematics(model_, data_, q);
   pinocchio::computeJointJacobians(model_, data_, q);
+  pinocchio::jacobianCenterOfMass(model_, data_, false);
 }
 
 
@@ -749,6 +752,18 @@ inline void Robot::getContactPoints(
 
 inline double Robot::totalWeight() const {
   return (- pinocchio::computeTotalMass(model_) * model_.gravity981.coeff(2));
+}
+
+
+template <typename VectorType>
+inline void Robot::get_com(const Eigen::MatrixBase<VectorType>& com) const {
+  const_cast<Eigen::MatrixBase<VectorType>&>(com) = data_.com[0];
+}
+
+
+template <typename MatrixType>
+inline void Robot::get_Jcom(const Eigen::MatrixBase<MatrixType>& J_com) const {
+  const_cast<Eigen::MatrixBase<MatrixType>&>(J_com) = data_.Jcom;
 }
 
 } // namespace idocp

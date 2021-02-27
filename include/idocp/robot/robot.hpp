@@ -687,6 +687,12 @@ public:
   void setBaumgarteWeights(const double baumgarte_weight_on_velocity, 
                            const double baumgarte_weight_on_position);
 
+  template <typename VectorType>
+  void get_com(const Eigen::MatrixBase<VectorType>& com) const;
+
+  template <typename MatrixType>
+  void get_Jcom(const Eigen::MatrixBase<MatrixType>& J_com) const;
+
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
