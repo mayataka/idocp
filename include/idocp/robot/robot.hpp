@@ -690,6 +690,8 @@ public:
   template <typename VectorType>
   void get_com(const Eigen::MatrixBase<VectorType>& com) const;
 
+  const Eigen::Vector3d& com() const;
+
   template <typename MatrixType>
   void get_Jcom(const Eigen::MatrixBase<MatrixType>& J_com) const;
 

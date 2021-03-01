@@ -760,6 +760,9 @@ inline void Robot::get_com(const Eigen::MatrixBase<VectorType>& com) const {
   const_cast<Eigen::MatrixBase<VectorType>&>(com) = data_.com[0];
 }
 
+inline const Eigen::Vector3d& Robot::com() const {
+  return data_.com[0];
+}
 
 template <typename MatrixType>
 inline void Robot::get_Jcom(const Eigen::MatrixBase<MatrixType>& J_com) const {
