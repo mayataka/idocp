@@ -62,7 +62,7 @@ public:
 
   void initConstraints(OCP& ocp, std::vector<Robot>& robots,
                        const ContactSequence& contact_sequence, 
-                       const Solution& s) const;
+                       Solution& s) const;
 
   void linearizeOCP(OCP& ocp, std::vector<Robot>& robots,
                     const ContactSequence& contact_sequence,

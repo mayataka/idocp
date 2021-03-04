@@ -81,8 +81,8 @@ public:
   /// @param[in] time_step Time step of this stage.
   /// @param[in] s Split solution of this stage.
   ///
-  void initConstraints(Robot& robot, const int time_step, 
-                       const SplitSolution& s);
+  void initConstraints(Robot& robot, const ContactStatus& contact_status, 
+                       const int time_step, SplitSolution& s);
 
   ///
   /// @brief Linearize the OCP for Newton's method around the current solution, 

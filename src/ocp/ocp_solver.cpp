@@ -81,12 +81,12 @@ void OCPSolver::updateSolution(const double t, const Eigen::VectorXd& q,
   riccati_solver_.computeDirection(ocp_, robots_, riccati_factorization_, s_, d_);
   double primal_step_size = riccati_solver_.maxPrimalStepSize();
   const double dual_step_size = riccati_solver_.maxDualStepSize();
-  if (line_search) {
-    const double max_primal_step_size = primal_step_size;
-    primal_step_size = line_search_.computeStepSize(ocp_, robots_, 
-                                                    contact_sequence_, q, v, 
-                                                    s_, d_, max_primal_step_size);
-  }
+  // if (line_search) {
+  //   const double max_primal_step_size = primal_step_size;
+  //   primal_step_size = line_search_.computeStepSize(ocp_, robots_, 
+  //                                                   contact_sequence_, q, v, 
+  //                                                   s_, d_, max_primal_step_size);
+  // }
   ocp_linearizer_.integrateSolution(ocp_, robots_, kkt_matrix_, kkt_residual_, 
                                     primal_step_size, dual_step_size, d_, s_);
 } 

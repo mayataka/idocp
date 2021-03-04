@@ -39,33 +39,46 @@ OCPLinearizer::~OCPLinearizer() {
 
 void OCPLinearizer::initConstraints(OCP& ocp, std::vector<Robot>& robots, 
                                     const ContactSequence& contact_sequence, 
-                                    const Solution& s) const {
-  const int N = ocp.discrete().N_ideal();
+                                    Solution& s) const {
+  const int N = ocp.discrete().N();
   const int N_impulse = ocp.discrete().N_impulse();
   const int N_lift = ocp.discrete().N_lift();
   const int N_all = N + 1 + 2*N_impulse + N_lift;
   #pragma omp parallel for num_threads(nthreads_)
   for (int i=0; i<N_all; ++i) {
     if (i < N) {
-      ocp[i].initConstraints(robots[omp_get_thread_num()], i, s[i]);
+      ocp[i].initConstraints(
+          robots[omp_get_thread_num()], 
+          contact_sequence.contactStatus(ocp.discrete().contactPhase(i)), 
+          i, s[i]);
     }
     else if (i == N) {
       ocp.terminal.initConstraints(robots[omp_get_thread_num()], N, s[N]);
     }
     else if (i < N+1+N_impulse) {
       const int impulse_index  = i - (N+1);
-      ocp.impulse[impulse_index].initConstraints(robots[omp_get_thread_num()], 
-                                                 s.impulse[impulse_index]);
+      ocp.impulse[impulse_index].initConstraints(
+          robots[omp_get_thread_num()], 
+          contact_sequence.impulseStatus(impulse_index), 
+          s.impulse[impulse_index]);
     }
     else if (i < N+1+2*N_impulse) {
       const int impulse_index  = i - (N+1+N_impulse);
-      ocp.aux[impulse_index].initConstraints(robots[omp_get_thread_num()], 0, 
-                                             s.aux[impulse_index]);
+      const int time_stage_after_impulse 
+          = ocp.discrete().timeStageAfterImpulse(impulse_index);
+      ocp.aux[impulse_index].initConstraints(
+          robots[omp_get_thread_num()],  
+          contact_sequence.contactStatus(
+              ocp.discrete().contactPhaseAfterImpulse(impulse_index)), 
+          0, s.aux[impulse_index]);
     }
     else {
       const int lift_index = i - (N+1+2*N_impulse);
-      ocp.lift[lift_index].initConstraints(robots[omp_get_thread_num()], 0, 
-                                           s.lift[lift_index]);
+      ocp.lift[lift_index].initConstraints(
+          robots[omp_get_thread_num()], 
+          contact_sequence.contactStatus(
+              ocp.discrete().contactPhaseAfterLift(lift_index)), 
+          0, s.lift[lift_index]);
     }
   }
 }

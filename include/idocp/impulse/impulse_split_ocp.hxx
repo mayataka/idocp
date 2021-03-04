@@ -38,7 +38,8 @@ inline bool ImpulseSplitOCP::isFeasible(Robot& robot,
 
 
 inline void ImpulseSplitOCP::initConstraints(Robot& robot,
-                                             const ImpulseSplitSolution& s) { 
+                                             const ImpulseStatus& impulse_status,
+                                             ImpulseSplitSolution& s) { 
   constraints_data_ = constraints_->createConstraintsData(robot, -1);
   constraints_->setSlackAndDual(robot, constraints_data_, s);
 }

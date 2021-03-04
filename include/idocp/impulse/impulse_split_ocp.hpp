@@ -79,7 +79,8 @@ public:
   /// @param[in] robot Robot model. Must be initialized by URDF or XML.
   /// @param[in] s Split solution of this stage.
   ///
-  void initConstraints(Robot& robot, const ImpulseSplitSolution& s);
+  void initConstraints(Robot& robot, const ImpulseStatus& impulse_status,
+                       ImpulseSplitSolution& s);
 
   ///
   /// @brief Linearize the OCP for Newton's method around the current solution, 
