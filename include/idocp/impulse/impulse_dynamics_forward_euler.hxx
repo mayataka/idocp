@@ -24,6 +24,17 @@ inline ImpulseDynamicsForwardEuler::~ImpulseDynamicsForwardEuler() {
 }
 
 
+inline void ImpulseDynamicsForwardEuler::impulseDynamics(
+    Robot& robot, const ImpulseStatus& impulse_status, ImpulseSplitSolution& s) {
+  robot.updateKinematics(s.q);
+  setImpulseStatus(impulse_status);
+  robot.getContactJacobian(impulse_status, data_.dCdv());
+  s.setImpulseStatus(impulse_status);
+  robot.impulseDynamics(s.q, s.v, data_.dCdv(), s.dv, s.f_stack());
+  s.set_f_vector();
+}
+
+
 inline void ImpulseDynamicsForwardEuler::linearizeImpulseDynamics(
     Robot& robot, const ImpulseStatus& impulse_status,  
     const ImpulseSplitSolution& s, ImpulseSplitKKTMatrix& kkt_matrix, 

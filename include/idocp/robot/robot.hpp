@@ -498,6 +498,34 @@ public:
       const ContactStatus& contact_status,
       const Eigen::MatrixBase<MatrixType>& dRNEA_partial_dfext);
 
+  template <typename ConfigVectorType, typename TangentVectorType>
+  void computeAllTerms(const Eigen::MatrixBase<ConfigVectorType>& q, 
+                       const Eigen::MatrixBase<TangentVectorType>& v);
+
+  template <typename MatrixType>
+  void getContactJacobian(const ContactStatus& contact_status,
+                          const Eigen::MatrixBase<MatrixType>& J);
+
+  template <typename MatrixType>
+  void getContactJacobian(const ImpulseStatus& impulse_status,
+                          const Eigen::MatrixBase<MatrixType>& J);
+
+  template <typename TangentVectorType, typename MatrixType, typename DriftVectorType, 
+            typename ResultVectorType1, typename ResultVectorType2>
+  void forwardDynamics(const Eigen::MatrixBase<TangentVectorType>& tau, 
+                       const Eigen::MatrixBase<MatrixType>& J, 
+                       const Eigen::MatrixBase<DriftVectorType>& gmm,
+                       const Eigen::MatrixBase<ResultVectorType1>& a,
+                       const Eigen::MatrixBase<ResultVectorType2>& f);
+
+  template <typename ConfigVectorType, typename TangentVectorType, typename MatrixType, 
+            typename ResultVectorType1, typename ResultVectorType2>
+  void impulseDynamics(const Eigen::MatrixBase<ConfigVectorType>& q, 
+                       const Eigen::MatrixBase<TangentVectorType>& v, 
+                       const Eigen::MatrixBase<MatrixType>& J, 
+                       const Eigen::MatrixBase<ResultVectorType1>& dv,
+                       const Eigen::MatrixBase<ResultVectorType2>& lmd);
+
   ///
   /// @brief Computes the inverse of the joint inertia matrix M.
   /// @param[in] M Joint inertia matrix. Size must be 

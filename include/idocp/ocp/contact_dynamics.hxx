@@ -45,6 +45,21 @@ inline ContactDynamics::~ContactDynamics() {
 }
 
 
+
+inline void ContactDynamics::forwardDynamics(Robot& robot, 
+                                             const ContactStatus& contact_status, 
+                                             SplitSolution& s) {
+  robot.computeAllTerms(s.q, s.v);
+  setContactStatus(contact_status);
+  robot.getContactJacobian(contact_status, data_.dCda());
+  robot.computeBaumgarteResidual(contact_status, baumgarte_time_step_, 
+                                 contact_status.contactPoints(), data_.C());
+  s.setContactStatus(contact_status);
+  robot.forwardDynamics(s.u, data_.dCda(), data_.C(), s.a, s.f_stack());
+  s.set_f_vector();
+}
+
+
 inline void ContactDynamics::linearizeContactDynamics(
     Robot& robot, const ContactStatus& contact_status, const double dt, 
     const SplitSolution& s, SplitKKTResidual& kkt_residual) { 

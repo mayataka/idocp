@@ -32,6 +32,9 @@ public:
   ImpulseDynamicsForwardEuler& operator=(ImpulseDynamicsForwardEuler&&) noexcept 
       = default;
 
+  void impulseDynamics(Robot& robot, const ImpulseStatus& impulse_status, 
+                       ImpulseSplitSolution& s);
+
   void linearizeImpulseDynamics(Robot& robot, 
                                 const ImpulseStatus& impulse_status, 
                                 const ImpulseSplitSolution& s, 

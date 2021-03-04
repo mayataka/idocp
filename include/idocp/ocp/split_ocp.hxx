@@ -49,6 +49,7 @@ inline void SplitOCP::initConstraints(Robot& robot,
                                       const ContactStatus& contact_status,
                                       const int time_step, SplitSolution& s) { 
   assert(time_step >= 0);
+  contact_dynamics_.forwardDynamics(robot, contact_status, s);
   constraints_data_ = constraints_->createConstraintsData(robot, time_step);
   constraints_->setSlackAndDual(robot, constraints_data_, s);
 }

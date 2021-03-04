@@ -13,6 +13,7 @@
 #include "pinocchio/algorithm/rnea-derivatives.hpp"
 #include "pinocchio/algorithm/aba.hpp"
 #include "pinocchio/algorithm/cholesky.hpp"
+#include "pinocchio/algorithm/compute-all-terms.hpp"
 #include "pinocchio/algorithm/contact-dynamics.hpp"
 
 #include <stdexcept>
@@ -222,8 +223,8 @@ template <typename ConfigVectorType>
 inline void Robot::updateKinematics(
     const Eigen::MatrixBase<ConfigVectorType>& q) {
   assert(q.size() == dimq_);
-  pinocchio::framesForwardKinematics(model_, data_, q);
   pinocchio::computeJointJacobians(model_, data_, q);
+  pinocchio::framesForwardKinematics(model_, data_, q);
   pinocchio::jacobianCenterOfMass(model_, data_, false);
 }
 
@@ -561,6 +562,131 @@ inline void Robot::dRNEAPartialdFext(
       ++num_active_contacts;
     }
   }
+}
+
+
+template <typename ConfigVectorType, typename TangentVectorType>
+inline void Robot::computeAllTerms(const Eigen::MatrixBase<ConfigVectorType>& q, 
+                                   const Eigen::MatrixBase<TangentVectorType>& v) {
+  pinocchio::computeAllTerms(model_, data_, q, v);
+  pinocchio::framesForwardKinematics(model_, data_, q);
+}
+
+
+template <typename MatrixType>
+inline void Robot::getContactJacobian(const ContactStatus& contact_status,
+                                      const Eigen::MatrixBase<MatrixType>& J) {
+  assert(J.cols() == dimv_);
+  int num_active_contacts = 0;
+  for (int i=0; i<point_contacts_.size(); ++i) {
+    if (contact_status.isContactActive(i)) {
+      point_contacts_[i].getContactJacobian(
+          model_, data_, 
+          (const_cast<Eigen::MatrixBase<MatrixType>&>(J))
+              .block(3*num_active_contacts, 0, 3, dimv_), false);
+      ++num_active_contacts;
+    }
+  }
+}
+
+
+template <typename MatrixType>
+inline void Robot::getContactJacobian(const ImpulseStatus& impulse_status,
+                                      const Eigen::MatrixBase<MatrixType>& J) {
+  assert(J.cols() == dimv_);
+  int num_active_contacts = 0;
+  for (int i=0; i<point_contacts_.size(); ++i) {
+    if (impulse_status.isImpulseActive(i)) {
+      point_contacts_[i].getContactJacobian(
+          model_, data_, 
+          (const_cast<Eigen::MatrixBase<MatrixType>&>(J))
+              .block(3*num_active_contacts, 0, 3, dimv_), false);
+      ++num_active_contacts;
+    }
+  }
+}
+
+
+template <typename TangentVectorType, typename MatrixType, typename DriftVectorType, 
+          typename ResultVectorType1, typename ResultVectorType2>
+inline void Robot::forwardDynamics(const Eigen::MatrixBase<TangentVectorType>& tau, 
+                                   const Eigen::MatrixBase<MatrixType>& J, 
+                                   const Eigen::MatrixBase<DriftVectorType>& gmm,
+                                   const Eigen::MatrixBase<ResultVectorType1>& a,
+                                   const Eigen::MatrixBase<ResultVectorType2>& f) {
+  const int dimf = f.size();
+
+  // Compute the UDUt decomposition of data.M
+  pinocchio::cholesky::decompose(model_, data_);
+
+  // Compute the dynamic drift (control - nle)
+  data_.torque_residual = tau - data_.nle;
+  pinocchio::cholesky::solve(model_, data_, data_.torque_residual);
+
+  data_.sDUiJt.leftCols(dimf) = J.transpose();
+  // Compute U^-1 * J.T
+  pinocchio::cholesky::Uiv(model_, data_, data_.sDUiJt);
+  for (Eigen::DenseIndex k=0; k<model_.nv; ++k) {
+    data_.sDUiJt.leftCols(dimf).row(k) /= sqrt(data_.D[k]);
+  }
+
+  data_.JMinvJt.topLeftCorner(dimf, dimf).noalias() 
+      = data_.sDUiJt.leftCols(dimf).transpose() * data_.sDUiJt.leftCols(dimf);
+
+  // data_.JMinvJt.topLeftCorner(dimf, dimf).diagonal().array() += inv_damping;
+  data_.llt_JMinvJt.compute(data_.JMinvJt.topLeftCorner(dimf, dimf));
+
+  // Compute the Lagrange Multipliers
+  data_.lambda_c.head(dimf).noalias() = - J * data_.torque_residual;
+  data_.lambda_c.head(dimf).noalias() -= gmm;
+  data_.llt_JMinvJt.solveInPlace(data_.lambda_c.head(dimf));
+
+  // Compute the joint acceleration
+  data_.ddq.noalias() = J.transpose() * data_.lambda_c.head(dimf);
+  pinocchio::cholesky::solve(model_, data_, data_.ddq);
+  data_.ddq.noalias() += data_.torque_residual;
+
+  (const_cast<Eigen::MatrixBase<ResultVectorType1>&>(a)) = data_.ddq;
+  (const_cast<Eigen::MatrixBase<ResultVectorType2>&>(f)) = data_.lambda_c;
+}
+
+
+template <typename ConfigVectorType, typename TangentVectorType, typename MatrixType, 
+          typename ResultVectorType1, typename ResultVectorType2>
+inline void Robot::impulseDynamics(const Eigen::MatrixBase<ConfigVectorType>& q, 
+                                   const Eigen::MatrixBase<TangentVectorType>& v, 
+                                   const Eigen::MatrixBase<MatrixType>& J, 
+                                   const Eigen::MatrixBase<ResultVectorType1>& dv,
+                                   const Eigen::MatrixBase<ResultVectorType2>& lmd) {
+  pinocchio::crba(model_, data_, q);
+
+  const int dimf = lmd.size();
+  // Compute the UDUt decomposition of data.M
+  pinocchio::cholesky::decompose(model_, data_);
+
+  data_.sDUiJt.leftCols(dimf) = J.transpose();
+  // Compute U^-1 * J.T
+  pinocchio::cholesky::Uiv(model_, data_, data_.sDUiJt.leftCols(dimf));
+  for(int k=0; k<model_.nv; ++k) {
+    data_.sDUiJt.leftCols(dimf).row(k) /= sqrt(data_.D[k]);
+  }
+
+  data_.JMinvJt.topLeftCorner(dimf, dimf).noalias() 
+      = data_.sDUiJt.leftCols(dimf).transpose() * data_.sDUiJt.leftCols(dimf);
+
+  data_.llt_JMinvJt.compute(data_.JMinvJt.topLeftCorner(dimf, dimf));
+
+  // Compute the Lagrange Multipliers related to the contact impulses
+  data_.impulse_c.noalias() = - J * v;
+  data_.llt_JMinvJt.solveInPlace(data_.impulse_c.head(dimf));
+
+  // Compute the joint velocity after impacts
+  data_.dq_after.noalias() = J.transpose() * data_.impulse_c.head(dimf);
+  pinocchio::cholesky::solve(model_, data_, data_.dq_after);
+  data_.dq_after.noalias() += v;
+
+  (const_cast<Eigen::MatrixBase<ResultVectorType1>&>(dv)) = data_.dq_after - v;
+  (const_cast<Eigen::MatrixBase<ResultVectorType2>&>(lmd)) = data_.impulse_c;
 }
 
 

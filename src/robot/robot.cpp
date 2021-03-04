@@ -85,6 +85,10 @@ Robot::Robot(const std::string& path_to_urdf,
   data_.sDUiJt.setZero();
   dimpulse_dv_.resize(dimv_, dimv_);
   dimpulse_dv_.setZero();
+  data_.lambda_c.resize(max_dimf_);
+  data_.lambda_c.setZero();
+  data_.impulse_c.resize(max_dimf_);
+  data_.impulse_c.setZero();
   initializeJointLimits();
 }
 

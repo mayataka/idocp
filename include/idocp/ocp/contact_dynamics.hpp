@@ -34,6 +34,9 @@ public:
 
   ContactDynamics& operator=(ContactDynamics&&) noexcept = default;
 
+  void forwardDynamics(Robot& robot, const ContactStatus& contact_status, 
+                       SplitSolution& s);
+
   void linearizeContactDynamics(Robot& robot, 
                                 const ContactStatus& contact_status, 
                                 const double dt, const SplitSolution& s, 
