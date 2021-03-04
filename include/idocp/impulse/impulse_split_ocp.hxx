@@ -166,6 +166,7 @@ inline double ImpulseSplitOCP::stageCost(Robot& robot, const double t,
   else {
     cost += constraints_->costSlackBarrier(constraints_data_);
   }
+  // cost += impulse_dynamics_.penaltyCost();
   return cost;
 }
 
@@ -188,6 +189,7 @@ inline double ImpulseSplitOCP::constraintViolation(
   violation += constraints_->l1NormPrimalResidual(constraints_data_);
   violation += stateequation::l1NormStateEuqationResidual(kkt_residual);
   violation += impulse_dynamics_.l1NormImpulseDynamicsResidual(kkt_residual);
+  // impulse_dynamics_.computeSwitchingConstraintsResidual(robot, impulse_status);
   return violation;
 }
 

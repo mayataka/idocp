@@ -42,7 +42,7 @@ inline void ImpulseDynamicsForwardEuler::linearizeImpulseDynamics(
   kkt_residual.lv().noalias() += data_.dCdv().transpose() * s.mu_stack();
   // We use an equivalence dCdv_() = dCddv, to avoid redundant calculation.
   kkt_residual.ldv.noalias() += data_.dCdv().transpose() * s.mu_stack();
-  linearizeSwitchingConstraints(robot, impulse_status, kkt_residual);
+  // linearizeSwitchingConstraints(robot, impulse_status, kkt_residual);
 }
 
 
@@ -67,16 +67,17 @@ inline void ImpulseDynamicsForwardEuler::linearizeImpulseVelocityConstraint(
 inline void ImpulseDynamicsForwardEuler::linearizeSwitchingConstraints(
     Robot& robot, const ImpulseStatus& impulse_status,
     ImpulseSplitKKTResidual& kkt_residual) {
-  robot.computeContactResidual(impulse_status, impulse_status.contactPoints(),
-                               data_.P());
-  robot.computeContactDerivative(impulse_status, data_.Pq());
-  kkt_residual.lq().noalias() += p_ * data_.Pq().transpose() * data_.P();
+  // robot.computeContactResidual(impulse_status, impulse_status.contactPoints(),
+  //                              data_.P());
+  // robot.computeContactDerivative(impulse_status, data_.Pq());
+  // kkt_residual.lq().noalias() += p_ * data_.Pq().transpose() * data_.P();
 }
 
 
 inline void ImpulseDynamicsForwardEuler::condenseImpulseDynamics(
     Robot& robot, const ImpulseStatus& impulse_status, 
     ImpulseSplitKKTMatrix& kkt_matrix, ImpulseSplitKKTResidual& kkt_residual) {
+  // kkt_matrix.Qqq().noalias() += p_ * data_.Pq().transpose() * data_.Pq();
   robot.computeMJtJinv(data_.dImDddv, data_.dCdv(), data_.MJtJinv());
   condensing(robot, impulse_status, data_, kkt_matrix, kkt_residual);
 }
@@ -184,13 +185,18 @@ inline double ImpulseDynamicsForwardEuler::squaredNormImpulseDynamicsResidual(
 }
 
 
-inline double ImpulseDynamicsForwardEuler::l1NormSwitchingConstraintsResidual() const {
-  return data_.P().lpNorm<1>();
-}
+// inline double ImpulseDynamicsForwardEuler::l1NormSwitchingConstraintsResidual() const {
+//   return data_.P().lpNorm<1>();
+// }
 
 
-inline double ImpulseDynamicsForwardEuler::squaredNormSwitchingConstraintsResidual() const {
-  return data_.P().squaredNorm();
+// inline double ImpulseDynamicsForwardEuler::squaredNormSwitchingConstraintsResidual() const {
+//   return data_.P().squaredNorm();
+// }
+
+
+inline double ImpulseDynamicsForwardEuler::penaltyCost() const {
+  return 0.5 * p_ * data_.P().squaredNorm();
 }
 
 

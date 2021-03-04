@@ -102,6 +102,23 @@ public:
   ///
   bool isFilterEmpty() const;
 
+  void computeCostAndViolation(OCP& ocp, std::vector<Robot>& robots,
+                               const ContactSequence& contact_sequence, 
+                               const Eigen::VectorXd& q, 
+                               const Eigen::VectorXd& v, const Solution& s,
+                               const double primal_step_size_for_barrier=0);
+
+  double totalCosts() const {
+    return (costs_.sum()+costs_impulse_.sum()+costs_aux_.sum()
+            +costs_lift_.sum());
+  }
+
+  double totalViolations() const {
+    return (violations_.sum()+violations_impulse_.sum()+violations_aux_.sum()
+            +violations_lift_.sum());
+  }
+
+
 private:
   LineSearchFilter filter_;
   int max_num_impulse_, nthreads_;
@@ -110,12 +127,6 @@ private:
                   violations_impulse_, violations_aux_, violations_lift_; 
   Solution s_try_;
   KKTResidual kkt_residual_;
-
-  void computeCostAndViolation(OCP& ocp, std::vector<Robot>& robots,
-                               const ContactSequence& contact_sequence, 
-                               const Eigen::VectorXd& q, 
-                               const Eigen::VectorXd& v, const Solution& s,
-                               const double primal_step_size_for_barrier=0);
 
   void computeSolution(const OCP& ocp, const std::vector<Robot>& robots, 
                           const Solution& s, const Direction& d, 
@@ -169,16 +180,6 @@ private:
     violations_impulse_.setZero();
     violations_aux_.setZero();
     violations_lift_.setZero();
-  }
-
-  double totalCosts() const {
-    return (costs_.sum()+costs_impulse_.sum()+costs_aux_.sum()
-            +costs_lift_.sum());
-  }
-
-  double totalViolations() const {
-    return (violations_.sum()+violations_impulse_.sum()+violations_aux_.sum()
-            +violations_lift_.sum());
   }
 
   static const Eigen::VectorXd& q_prev(const OCPDiscretizer& discretizer, 

@@ -97,9 +97,11 @@ public:
   double squaredNormImpulseDynamicsResidual(
       const ImpulseSplitKKTResidual& kkt_residual) const;
 
-  double l1NormSwitchingConstraintsResidual() const;
+//   double l1NormSwitchingConstraintsResidual() const;
 
-  double squaredNormSwitchingConstraintsResidual() const;
+//   double squaredNormSwitchingConstraintsResidual() const;
+
+  double penaltyCost() const;
 
   void set_penalty(const double penalty);
 

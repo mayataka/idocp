@@ -285,12 +285,15 @@ void OCPSolver::showInfo() const {
 }
 
 
-void OCPSolver::setPenalty(const double p) {
-  for (auto& e : ocp_.impulse) { 
-    e.setPenalty(p); 
-  }
+double OCPSolver::cost() {
+  const int dimq = robots_[0].dimq();
+  const int dimv = robots_[0].dimv();
+  discretizeSolution();
+  line_search_.computeCostAndViolation(ocp_, robots_, contact_sequence_,
+                                       Eigen::VectorXd::Zero(dimq), 
+                                       Eigen::VectorXd::Zero(dimv), s_);
+  return line_search_.totalCosts();
 }
-
 
 void OCPSolver::discretizeSolution() {
   for (int i=0; i<=ocp_.discrete().N(); ++i) {

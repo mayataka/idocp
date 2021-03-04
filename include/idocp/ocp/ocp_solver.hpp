@@ -168,12 +168,12 @@ public:
   ///
   std::vector<Eigen::VectorXd> getSolution(const std::string& name) const;
 
-  void setPenalty(const double p);
-
   ///
   /// @brief Shows the information of the optimal control problem.
   ///
   void showInfo() const;
+
+  double cost();
 
 private:
   std::vector<Robot> robots_;

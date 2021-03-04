@@ -126,11 +126,6 @@ void LineSearch::computeCostAndViolation(
       const int impulse_index = i - (N+1);
       const int time_stage_before_impulse 
           = ocp.discrete().timeStageBeforeImpulse(impulse_index);
-      costs_impulse_.coeffRef(impulse_index) 
-          = ocp.impulse[impulse_index].stageCost(
-              robots[omp_get_thread_num()], 
-              ocp.discrete().t_impulse(impulse_index), s.impulse[impulse_index],
-              primal_step_size);
       violations_impulse_.coeffRef(impulse_index) 
           = ocp.impulse[impulse_index].constraintViolation(
               robots[omp_get_thread_num()], 
@@ -138,6 +133,11 @@ void LineSearch::computeCostAndViolation(
               ocp.discrete().t_impulse(impulse_index), s.impulse[impulse_index],
               s.aux[impulse_index].q, s.aux[impulse_index].v,
               kkt_residual_.impulse[impulse_index]);
+      costs_impulse_.coeffRef(impulse_index) 
+          = ocp.impulse[impulse_index].stageCost(
+              robots[omp_get_thread_num()], 
+              ocp.discrete().t_impulse(impulse_index), s.impulse[impulse_index],
+              primal_step_size);
     }
     else if (i < N+1+2*N_impulse) {
       const int impulse_index  = i - (N+1+N_impulse);
