@@ -199,7 +199,7 @@ inline void ContactDynamics::computeCondensedPrimalDirection(
   d.daf().noalias() = - data_.MJtJinv_dIDCdqv() * d.dx();
   d.daf().noalias() 
       += data_.MJtJinv().middleCols(robot.dim_passive(), dimu_) * d.du();
-  d.daf().noalias() -= data_.MJtJinv_IDC();
+  // d.daf().noalias() -= data_.MJtJinv_IDC();
   d.df().array() *= -1;
 }
 

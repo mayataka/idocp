@@ -167,7 +167,7 @@ inline void ImpulseDynamicsForwardEuler::expansionPrimal(
     const Robot& robot, const ImpulseDynamicsForwardEulerData& data, 
     ImpulseSplitDirection& d) {
   d.ddvf().noalias()  = - data.MJtJinv_dImDCdqv() * d.dx();
-  d.ddvf().noalias() -= data.MJtJinv_ImDC();
+  // d.ddvf().noalias() -= data.MJtJinv_ImDC();
   d.df().array() *= -1;
 }
 
