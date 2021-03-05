@@ -150,6 +150,9 @@ inline void ImpulseSplitOCP::computeKKTResidual(
 
   impulse_dynamics_.linearizeImpulseDynamics(robot, impulse_status, s, 
                                              kkt_matrix, kkt_residual);
+
+  impulse_dynamics_.condenseImpulseDynamics(robot, impulse_status, 
+                                            kkt_matrix, kkt_residual);
 }
 
 
@@ -157,8 +160,8 @@ inline double ImpulseSplitOCP::squaredNormKKTResidual(
     const ImpulseSplitKKTResidual& kkt_residual) const {
   double error = 0;
   error += kkt_residual.lx().squaredNorm();
-  error += kkt_residual.ldv.squaredNorm();
-  error += kkt_residual.lf().squaredNorm();
+  // error += kkt_residual.ldv.squaredNorm();
+  // error += kkt_residual.lf().squaredNorm();
   error += stateequation::squaredNormStateEuqationResidual(kkt_residual);
   // error += impulse_dynamics_.squaredNormImpulseDynamicsResidual(kkt_residual);
   error += constraints_->squaredNormPrimalAndDualResidual(constraints_data_);

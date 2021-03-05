@@ -84,6 +84,9 @@ inline void SplitOCP::linearizeOCP(Robot& robot,
                                        kkt_matrix, kkt_residual);
   stateequation::condenseForwardEuler(robot, dt, s, s_next.q, 
                                       kkt_matrix, kkt_residual);
+
+  contact_dynamics_.forwardDynamicsDual(robot, contact_status, kkt_residual, s);
+
   contact_dynamics_.linearizeContactDynamics(robot, contact_status, dt, s, 
                                              kkt_residual);
   cost_->computeStageCostHessian(robot, cost_data_, t, dt, s, kkt_matrix);
@@ -172,8 +175,13 @@ inline void SplitOCP::computeKKTResidual(Robot& robot,
   constraints_->augmentDualResidual(robot, constraints_data_, dt, s, kkt_residual);
   stateequation::linearizeForwardEuler(robot, dt, q_prev, s, s_next, 
                                        kkt_matrix, kkt_residual);
+
+  contact_dynamics_.forwardDynamicsDual(robot, contact_status, kkt_residual, s);
+
   contact_dynamics_.linearizeContactDynamics(robot, contact_status, dt, s, 
                                              kkt_residual);
+  contact_dynamics_.condenseContactDynamics(robot, contact_status, dt, 
+                                            kkt_matrix, kkt_residual, true);
 }
 
 
@@ -182,11 +190,11 @@ inline double SplitOCP::squaredNormKKTResidual(
   assert(dt > 0);
   double error = 0;
   error += kkt_residual.lx().squaredNorm();
-  error += kkt_residual.la.squaredNorm();
-  error += kkt_residual.lf().squaredNorm();
-  if (has_floating_base_) {
-    error += kkt_residual.lu_passive.squaredNorm();
-  }
+  // error += kkt_residual.la.squaredNorm();
+  // error += kkt_residual.lf().squaredNorm();
+  // if (has_floating_base_) {
+  //   error += kkt_residual.lu_passive.squaredNorm();
+  // }
   error += kkt_residual.lu().squaredNorm();
   error += stateequation::squaredNormStateEuqationResidual(kkt_residual);
   // error += contact_dynamics_.squaredNormContactDynamicsResidual(dt);

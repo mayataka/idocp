@@ -62,15 +62,15 @@ inline void ImpulseDynamicsForwardEuler::linearizeImpulseDynamics(
   linearizeImpulseVelocityConstraint(robot, impulse_status, data_);
   // augment inverse impulse dynamics constraint
   kkt_residual.lq().noalias() += data_.dImDdq().transpose() * s.beta;
-  kkt_residual.ldv.noalias() += data_.dImDddv.transpose() * s.beta;
+  // kkt_residual.ldv.noalias() += data_.dImDddv.transpose() * s.beta;
   // We use an equivalence dmIDdf_().transpose() = - dCdv_() = - dCddv, to avoid
   // redundant calculation of dImDdf_().
-  kkt_residual.lf().noalias() -= data_.dCdv() * s.beta;
+  // kkt_residual.lf().noalias() -= data_.dCdv() * s.beta;
   // augment impulse velocity constraint
   kkt_residual.lq().noalias() += data_.dCdq().transpose() * s.mu_stack();
   kkt_residual.lv().noalias() += data_.dCdv().transpose() * s.mu_stack();
   // We use an equivalence dCdv_() = dCddv, to avoid redundant calculation.
-  kkt_residual.ldv.noalias() += data_.dCdv().transpose() * s.mu_stack();
+  // kkt_residual.ldv.noalias() += data_.dCdv().transpose() * s.mu_stack();
   // linearizeSwitchingConstraints(robot, impulse_status, kkt_residual);
 }
 
