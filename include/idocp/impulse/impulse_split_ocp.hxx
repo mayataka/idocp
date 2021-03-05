@@ -154,7 +154,7 @@ inline double ImpulseSplitOCP::squaredNormKKTResidual(
   error += kkt_residual.ldv.squaredNorm();
   error += kkt_residual.lf().squaredNorm();
   error += stateequation::squaredNormStateEuqationResidual(kkt_residual);
-  error += impulse_dynamics_.squaredNormImpulseDynamicsResidual(kkt_residual);
+  // error += impulse_dynamics_.squaredNormImpulseDynamicsResidual(kkt_residual);
   error += constraints_->squaredNormPrimalAndDualResidual(constraints_data_);
   return error;
 }

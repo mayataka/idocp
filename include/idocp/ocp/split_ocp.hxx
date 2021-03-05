@@ -189,7 +189,7 @@ inline double SplitOCP::squaredNormKKTResidual(
   }
   error += kkt_residual.lu().squaredNorm();
   error += stateequation::squaredNormStateEuqationResidual(kkt_residual);
-  error += contact_dynamics_.squaredNormContactDynamicsResidual(dt);
+  // error += contact_dynamics_.squaredNormContactDynamicsResidual(dt);
   error += dt * dt * constraints_->squaredNormPrimalAndDualResidual(constraints_data_);
   return error;
 }
