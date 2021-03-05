@@ -276,6 +276,11 @@ std::vector<Eigen::VectorXd> OCPSolver::getSolution(
       sol.push_back(s_[i].u);
     }
   }
+  if (name == "lmd") {
+    for (int i=0; i<ocp_.discrete().N_impulse(); ++i) {
+      sol.push_back(s_.impulse[i].f_stack());
+    }
+  }
   return sol;
 }
 

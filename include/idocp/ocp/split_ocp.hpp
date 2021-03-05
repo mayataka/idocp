@@ -101,7 +101,7 @@ public:
   template <typename SplitSolutionType>
   void linearizeOCP(Robot& robot, const ContactStatus& contact_status, 
                     const double t, const double dt, 
-                    const Eigen::VectorXd& q_prev, const SplitSolution& s, 
+                    const Eigen::VectorXd& q_prev, SplitSolution& s, 
                     const SplitSolutionType& s_next, SplitKKTMatrix& kkt_matrix,
                     SplitKKTResidual& kkt_residual);
 
@@ -114,7 +114,7 @@ public:
   /// @param[in, out] d Split direction of this stage.
   /// 
   void computeCondensedPrimalDirection(Robot& robot, const double dt, 
-                                       const SplitSolution& s, 
+                                       SplitSolution& s, 
                                        SplitDirection& d);
 
   ///
@@ -184,7 +184,7 @@ public:
   template <typename SplitSolutionType>
   void computeKKTResidual(Robot& robot, const ContactStatus& contact_status,
                           const double t, const double dt, 
-                          const Eigen::VectorXd& q_prev, const SplitSolution& s, 
+                          const Eigen::VectorXd& q_prev, SplitSolution& s, 
                           const SplitSolutionType& s_next,
                           SplitKKTMatrix& kkt_matrix, 
                           SplitKKTResidual& kkt_residual);

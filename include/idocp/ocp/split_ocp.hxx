@@ -60,12 +60,15 @@ inline void SplitOCP::linearizeOCP(Robot& robot,
                                    const ContactStatus& contact_status,  
                                    const double t, const double dt, 
                                    const Eigen::VectorXd& q_prev, 
-                                   const SplitSolution& s, 
+                                   SplitSolution& s, 
                                    const SplitSolutionType& s_next,
                                    SplitKKTMatrix& kkt_matrix, 
                                    SplitKKTResidual& kkt_residual) {
   assert(dt > 0);
   assert(q_prev.size() == robot.dimq());
+
+  contact_dynamics_.forwardDynamics(robot, contact_status, s);
+
   kkt_matrix.setContactStatus(contact_status);
   kkt_residual.setContactStatus(contact_status);
   kkt_matrix.setImpulseStatus();
@@ -93,7 +96,7 @@ inline void SplitOCP::linearizeOCP(Robot& robot,
 
 inline void SplitOCP::computeCondensedPrimalDirection(Robot& robot, 
                                                       const double dt, 
-                                                      const SplitSolution& s, 
+                                                      SplitSolution& s, 
                                                       SplitDirection& d) {
   d.setContactStatusByDimension(s.dimf());
   contact_dynamics_.computeCondensedPrimalDirection(robot, d);
@@ -148,11 +151,14 @@ inline void SplitOCP::computeKKTResidual(Robot& robot,
                                          const ContactStatus& contact_status, 
                                          const double t, const double dt, 
                                          const Eigen::VectorXd& q_prev, 
-                                         const SplitSolution& s,
+                                         SplitSolution& s,
                                          const SplitSolutionType& s_next, 
                                          SplitKKTMatrix& kkt_matrix,
                                          SplitKKTResidual& kkt_residual) {
   assert(dt > 0);
+
+  contact_dynamics_.forwardDynamics(robot, contact_status, s);
+
   kkt_matrix.setContactStatus(contact_status);
   kkt_residual.setContactStatus(contact_status);
   kkt_matrix.setImpulseStatus();

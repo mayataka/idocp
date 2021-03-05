@@ -112,7 +112,7 @@ public:
   ///
   void computeDirection(OCP& ocp, std::vector<Robot>& robots, 
                         const RiccatiFactorization& factorization, 
-                        const Solution& s, Direction& d);
+                        Solution& s, Direction& d);
 
   ///
   /// @brief Returns max primal step size.

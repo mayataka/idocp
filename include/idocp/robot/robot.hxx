@@ -620,12 +620,13 @@ inline void Robot::forwardDynamics(const Eigen::MatrixBase<TangentVectorType>& t
   pinocchio::cholesky::decompose(model_, data_);
 
   // Compute the dynamic drift (control - nle)
-  data_.torque_residual = tau - data_.nle;
+  data_.torque_residual = - data_.nle;
+  data_.torque_residual.tail(dimu()).noalias() += tau;
   pinocchio::cholesky::solve(model_, data_, data_.torque_residual);
 
   data_.sDUiJt.leftCols(dimf) = J.transpose();
   // Compute U^-1 * J.T
-  pinocchio::cholesky::Uiv(model_, data_, data_.sDUiJt);
+  pinocchio::cholesky::Uiv(model_, data_, data_.sDUiJt.leftCols(dimf));
   for (Eigen::DenseIndex k=0; k<model_.nv; ++k) {
     data_.sDUiJt.leftCols(dimf).row(k) /= sqrt(data_.D[k]);
   }
@@ -677,7 +678,7 @@ inline void Robot::impulseDynamics(const Eigen::MatrixBase<ConfigVectorType>& q,
   data_.llt_JMinvJt.compute(data_.JMinvJt.topLeftCorner(dimf, dimf));
 
   // Compute the Lagrange Multipliers related to the contact impulses
-  data_.impulse_c.noalias() = - J * v;
+  data_.impulse_c.head(dimf).noalias() = - J * v;
   data_.llt_JMinvJt.solveInPlace(data_.impulse_c.head(dimf));
 
   // Compute the joint velocity after impacts

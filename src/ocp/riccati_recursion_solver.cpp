@@ -145,8 +145,7 @@ void RiccatiRecursionSolver::forwardRiccatiRecursion(
 
 void RiccatiRecursionSolver::computeDirection(
     OCP& ocp, std::vector<Robot>& robots, 
-    const RiccatiFactorization& factorization, const Solution& s, 
-    Direction& d) {
+    const RiccatiFactorization& factorization, Solution& s, Direction& d) {
   assert(robots.size() == nthreads_);
   const int N = ocp.discrete().N();
   const int N_impulse = ocp.discrete().N_impulse();

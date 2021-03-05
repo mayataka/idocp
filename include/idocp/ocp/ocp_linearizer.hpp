@@ -61,20 +61,19 @@ public:
   OCPLinearizer& operator=(OCPLinearizer&&) noexcept = default;
 
   void initConstraints(OCP& ocp, std::vector<Robot>& robots,
-                       const ContactSequence& contact_sequence, 
-                       Solution& s) const;
+                       const ContactSequence& contact_sequence, Solution& s) const;
 
   void linearizeOCP(OCP& ocp, std::vector<Robot>& robots,
                     const ContactSequence& contact_sequence,
                     const Eigen::VectorXd& q, const Eigen::VectorXd& v, 
-                    const Solution& s, KKTMatrix& kkt_matrix, 
+                    Solution& s, KKTMatrix& kkt_matrix, 
                     KKTResidual& kkt_residual,
                     StateConstraintJacobian& jac) const;
 
   void computeKKTResidual(OCP& ocp, std::vector<Robot>& robots, 
                           const ContactSequence& contact_sequence,
                           const Eigen::VectorXd& q, const Eigen::VectorXd& v, 
-                          const Solution& s, KKTMatrix& kkt_matrix, 
+                          Solution& s, KKTMatrix& kkt_matrix, 
                           KKTResidual& kkt_residual,
                           StateConstraintJacobian& jac) const;
 
@@ -98,7 +97,7 @@ private:
   void runParallel(OCP& ocp, std::vector<Robot>& robots,
                    const ContactSequence& contact_sequence,
                    const Eigen::VectorXd& q, const Eigen::VectorXd& v, 
-                   const Solution& s, KKTMatrix& kkt_matrix, 
+                   Solution& s, KKTMatrix& kkt_matrix, 
                    KKTResidual& kkt_residual,
                    StateConstraintJacobian& jac) const;
 

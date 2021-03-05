@@ -96,7 +96,7 @@ public:
   ///
   void linearizeOCP(Robot& robot, const ImpulseStatus& impulse_status, 
                     const double t, const Eigen::VectorXd& q_prev, 
-                    const ImpulseSplitSolution& s, 
+                    ImpulseSplitSolution& s, 
                     const SplitSolution& s_next, 
                     ImpulseSplitKKTMatrix& kkt_matrix, 
                     ImpulseSplitKKTResidual& kkt_residual);
@@ -108,8 +108,7 @@ public:
   /// @param[in] s Split solution of this stage.
   /// @param[in] d Split direction of this stage.
   /// 
-  void computeCondensedPrimalDirection(Robot& robot, 
-                                       const ImpulseSplitSolution& s, 
+  void computeCondensedPrimalDirection(Robot& robot, ImpulseSplitSolution& s, 
                                        ImpulseSplitDirection& d);
 
   ///
@@ -173,7 +172,7 @@ public:
   ///
   void computeKKTResidual(Robot& robot, const ImpulseStatus& impulse_status,
                           const double t, const Eigen::VectorXd& q_prev, 
-                          const ImpulseSplitSolution& s, 
+                          ImpulseSplitSolution& s, 
                           const SplitSolution& s_next,
                           ImpulseSplitKKTMatrix& kkt_matrix, 
                           ImpulseSplitKKTResidual& kkt_residual);

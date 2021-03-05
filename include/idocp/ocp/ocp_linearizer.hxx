@@ -16,7 +16,7 @@ struct LinearizeOCP {
   static inline void run(SplitOCP& split_ocp, Robot& robot, 
                          const ContactStatus& contact_status, const double t, 
                          const double dt, const Eigen::VectorXd& q_prev, 
-                         const SplitSolution& s, 
+                         SplitSolution& s, 
                          const SplitSolutionType& s_next, 
                          SplitKKTMatrix& kkt_matrix, 
                          SplitKKTResidual& kkt_residual) {
@@ -26,7 +26,7 @@ struct LinearizeOCP {
 
   static inline void run(TerminalOCP& terminal_ocp, Robot& robot, 
                          const double t, const Eigen::VectorXd& q_prev, 
-                         const SplitSolution& s, SplitKKTMatrix& kkt_matrix, 
+                         SplitSolution& s, SplitKKTMatrix& kkt_matrix, 
                          SplitKKTResidual& kkt_residual) {
     terminal_ocp.linearizeOCP(robot, t, q_prev, s, kkt_matrix, kkt_residual);
   }
@@ -34,7 +34,7 @@ struct LinearizeOCP {
   static inline void run(ImpulseSplitOCP& impulse_split_ocp, Robot& robot, 
                          const ImpulseStatus& impulse_status, const double t, 
                          const Eigen::VectorXd& q_prev, 
-                         const ImpulseSplitSolution& s, 
+                         ImpulseSplitSolution& s, 
                          const SplitSolution& s_next, 
                          ImpulseSplitKKTMatrix& kkt_matrix, 
                          ImpulseSplitKKTResidual& kkt_residual) {
@@ -49,7 +49,7 @@ struct ComputeKKTResidual {
   static inline void run(SplitOCP& split_ocp, Robot& robot, 
                          const ContactStatus& contact_status, const double t, 
                          const double dt, const Eigen::VectorXd& q_prev, 
-                         const SplitSolution& s, 
+                         SplitSolution& s, 
                          const SplitSolutionType& s_next, 
                          SplitKKTMatrix& kkt_matrix, 
                          SplitKKTResidual& kkt_residual) {
@@ -59,7 +59,7 @@ struct ComputeKKTResidual {
 
   static inline void run(TerminalOCP& terminal_ocp, Robot& robot,  
                          const double t, const Eigen::VectorXd& q_prev,
-                         const SplitSolution& s, SplitKKTMatrix& kkt_matrix, 
+                         SplitSolution& s, SplitKKTMatrix& kkt_matrix, 
                          SplitKKTResidual& kkt_residual) {
     terminal_ocp.computeKKTResidual(robot, t, q_prev, s, kkt_matrix, kkt_residual);
   }
@@ -67,7 +67,7 @@ struct ComputeKKTResidual {
   static inline void run(ImpulseSplitOCP& impulse_split_ocp, Robot& robot, 
                          const ImpulseStatus& impulse_status, const double t, 
                          const Eigen::VectorXd& q_prev, 
-                         const ImpulseSplitSolution& s, 
+                         ImpulseSplitSolution& s, 
                          const SplitSolution& s_next, 
                          ImpulseSplitKKTMatrix& kkt_matrix, 
                          ImpulseSplitKKTResidual& kkt_residual) {
@@ -87,7 +87,7 @@ inline void OCPLinearizer::runParallel(OCP& ocp, std::vector<Robot>& robots,
                                        const ContactSequence& contact_sequence,
                                        const Eigen::VectorXd& q, 
                                        const Eigen::VectorXd& v, 
-                                       const Solution& s, KKTMatrix& kkt_matrix,
+                                       Solution& s, KKTMatrix& kkt_matrix,
                                        KKTResidual& kkt_residual,
                                        StateConstraintJacobian& jac) const {
   assert(robots.size() == nthreads_);

@@ -48,10 +48,13 @@ inline void ImpulseSplitOCP::initConstraints(Robot& robot,
 
 inline void ImpulseSplitOCP::linearizeOCP(
     Robot& robot, const ImpulseStatus& impulse_status, const double t,  
-    const Eigen::VectorXd& q_prev, const ImpulseSplitSolution& s, 
+    const Eigen::VectorXd& q_prev, ImpulseSplitSolution& s, 
     const SplitSolution& s_next, ImpulseSplitKKTMatrix& kkt_matrix, 
     ImpulseSplitKKTResidual& kkt_residual) {
   assert(q_prev.size() == robot.dimq());
+
+  impulse_dynamics_.impulseDynamics(robot, impulse_status, s);
+
   kkt_matrix.setImpulseStatus(impulse_status);
   kkt_residual.setImpulseStatus(impulse_status);
   robot.updateKinematics(s.q, s.v+s.dv);
@@ -75,7 +78,7 @@ inline void ImpulseSplitOCP::linearizeOCP(
 
 
 inline void ImpulseSplitOCP::computeCondensedPrimalDirection(
-    Robot& robot, const ImpulseSplitSolution& s, ImpulseSplitDirection& d) {
+    Robot& robot, ImpulseSplitSolution& s, ImpulseSplitDirection& d) {
   d.setImpulseStatusByDimension(s.dimf());
   impulse_dynamics_.computeCondensedPrimalDirection(robot, d);
   constraints_->computeSlackAndDualDirection(robot, constraints_data_, s, d);
@@ -123,10 +126,13 @@ inline void ImpulseSplitOCP::updatePrimal(
 
 inline void ImpulseSplitOCP::computeKKTResidual(
     Robot& robot, const ImpulseStatus& impulse_status, const double t, 
-    const Eigen::VectorXd& q_prev, const ImpulseSplitSolution& s, 
+    const Eigen::VectorXd& q_prev, ImpulseSplitSolution& s, 
     const SplitSolution& s_next, ImpulseSplitKKTMatrix& kkt_matrix, 
     ImpulseSplitKKTResidual& kkt_residual) {
   assert(q_prev.size() == robot.dimq());
+
+  impulse_dynamics_.impulseDynamics(robot, impulse_status, s);
+
   kkt_matrix.setImpulseStatus(impulse_status);
   kkt_residual.setImpulseStatus(impulse_status);
   kkt_residual.setZero();
