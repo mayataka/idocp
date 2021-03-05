@@ -67,6 +67,9 @@ inline void ImpulseSplitOCP::linearizeOCP(
                                               kkt_matrix, kkt_residual);
   stateequation::condenseImpulseForwardEuler(robot, s, s_next.q, 
                                              kkt_matrix, kkt_residual);
+
+  impulse_dynamics_.impulseDynamicsDual(robot, impulse_status, kkt_residual, s);
+
   impulse_dynamics_.linearizeImpulseDynamics(robot, impulse_status, s,
                                              kkt_matrix, kkt_residual);
   cost_->computeImpulseCostHessian(robot, cost_data_, t, s, kkt_matrix);
@@ -142,6 +145,9 @@ inline void ImpulseSplitOCP::computeKKTResidual(
   constraints_->augmentDualResidual(robot, constraints_data_, s, kkt_residual);
   stateequation::linearizeImpulseForwardEuler(robot, q_prev, s, s_next, 
                                               kkt_matrix, kkt_residual);
+
+  impulse_dynamics_.impulseDynamicsDual(robot, impulse_status, kkt_residual, s);
+
   impulse_dynamics_.linearizeImpulseDynamics(robot, impulse_status, s, 
                                              kkt_matrix, kkt_residual);
 }

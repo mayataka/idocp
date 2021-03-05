@@ -35,6 +35,10 @@ public:
   void impulseDynamics(Robot& robot, const ImpulseStatus& impulse_status, 
                        ImpulseSplitSolution& s);
 
+  void impulseDynamicsDual(Robot& robot, const ImpulseStatus& impulse_status, 
+                           const ImpulseSplitKKTResidual& kkt_residual,
+                           ImpulseSplitSolution& s);
+
   void linearizeImpulseDynamics(Robot& robot, 
                                 const ImpulseStatus& impulse_status, 
                                 const ImpulseSplitSolution& s, 

@@ -684,9 +684,8 @@ inline void Robot::impulseDynamics(const Eigen::MatrixBase<ConfigVectorType>& q,
   // Compute the joint velocity after impacts
   data_.dq_after.noalias() = J.transpose() * data_.impulse_c.head(dimf);
   pinocchio::cholesky::solve(model_, data_, data_.dq_after);
-  data_.dq_after.noalias() += v;
 
-  (const_cast<Eigen::MatrixBase<ResultVectorType1>&>(dv)) = data_.dq_after - v;
+  (const_cast<Eigen::MatrixBase<ResultVectorType1>&>(dv)) = data_.dq_after;
   (const_cast<Eigen::MatrixBase<ResultVectorType2>&>(lmd)) = data_.impulse_c;
 }
 
