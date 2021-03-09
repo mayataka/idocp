@@ -121,13 +121,13 @@ inline void PointContact::computeBaumgarteDerivatives(
   const_cast<Eigen::MatrixBase<MatrixType1>&> (baumgarte_partial_dq).noalias()
       += v_angular_skew_ * frame_v_partial_dq_.template topRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType1>&> (baumgarte_partial_dq).noalias()
-      += v_linear_skew_ * frame_v_partial_dq_.template bottomRows<3>();
+      -= v_linear_skew_ * frame_v_partial_dq_.template bottomRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType2>&> (baumgarte_partial_dv)
       = frame_a_partial_dv_.template topRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType2>&> (baumgarte_partial_dv).noalias()
       += v_angular_skew_ * J_frame_.template topRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType2>&> (baumgarte_partial_dv).noalias()
-      += v_linear_skew_ * J_frame_.template bottomRows<3>();
+      -= v_linear_skew_ * J_frame_.template bottomRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType3>&> (baumgarte_partial_da)
       = frame_a_partial_da_.template topRows<3>();
   (const_cast<Eigen::MatrixBase<MatrixType1>&> (baumgarte_partial_dq)).noalias()
