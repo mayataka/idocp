@@ -70,7 +70,6 @@ inline void PointContact::computeBaumgarteResidual(
     const double baumgarte_weight_on_position,
     const Eigen::MatrixBase<VectorType1>& contact_point,
     const Eigen::MatrixBase<VectorType2>& baumgarte_residual) const {
-  assert(time_step > 0);
   assert(contact_point.size() == 3);
   assert(baumgarte_residual.size() == 3);
   const_cast<Eigen::MatrixBase<VectorType2>&> (baumgarte_residual).noalias()
@@ -94,7 +93,6 @@ inline void PointContact::computeBaumgarteDerivatives(
     const Eigen::MatrixBase<MatrixType1>& baumgarte_partial_dq, 
     const Eigen::MatrixBase<MatrixType2>& baumgarte_partial_dv, 
     const Eigen::MatrixBase<MatrixType3>& baumgarte_partial_da) {
-  assert(time_step > 0);
   assert(baumgarte_partial_dq.cols() == dimv_);
   assert(baumgarte_partial_dv.cols() == dimv_);
   assert(baumgarte_partial_da.cols() == dimv_);
@@ -121,13 +119,13 @@ inline void PointContact::computeBaumgarteDerivatives(
   const_cast<Eigen::MatrixBase<MatrixType1>&> (baumgarte_partial_dq).noalias()
       += v_angular_skew_ * frame_v_partial_dq_.template topRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType1>&> (baumgarte_partial_dq).noalias()
-      += v_linear_skew_ * frame_v_partial_dq_.template bottomRows<3>();
+      -= v_linear_skew_ * frame_v_partial_dq_.template bottomRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType2>&> (baumgarte_partial_dv)
       = frame_a_partial_dv_.template topRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType2>&> (baumgarte_partial_dv).noalias()
       += v_angular_skew_ * J_frame_.template topRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType2>&> (baumgarte_partial_dv).noalias()
-      += v_linear_skew_ * J_frame_.template bottomRows<3>();
+      -= v_linear_skew_ * J_frame_.template bottomRows<3>();
   const_cast<Eigen::MatrixBase<MatrixType3>&> (baumgarte_partial_da)
       = frame_a_partial_da_.template topRows<3>();
   (const_cast<Eigen::MatrixBase<MatrixType1>&> (baumgarte_partial_dq)).noalias()

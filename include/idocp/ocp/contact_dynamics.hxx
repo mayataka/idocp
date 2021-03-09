@@ -211,27 +211,27 @@ inline void ContactDynamics::computeCondensedDualDirection(
     const Eigen::MatrixBase<VectorType>& dgmm, SplitDirection& d) {
   assert(dt > 0);
   assert(dgmm.size() == robot.dimv());
-  if (has_floating_base_) {
-    d.dnu_passive = kkt_residual.lu_passive;
-    d.dnu_passive.noalias() += kkt_matrix.Quu_passive_topRight() * d.du();
-    d.dnu_passive.noalias() += kkt_matrix.Qxu_passive().transpose() * d.dx();
-    d.dnu_passive.noalias() 
-        += dt * data_.MJtJinv().leftCols(dimv_).template topRows<kDimFloatingBase>() * dgmm;
-    d.dnu_passive.array() *= - (1/dt);
-  }
-  data_.laf().noalias() += data_.Qafqv() * d.dx();
-  data_.laf().noalias() += data_.Qafu() * d.du();
-  data_.la().noalias() += dt * dgmm;
-  d.dbetamu().noalias() = - data_.MJtJinv() * data_.laf() * (1/dt);
+  // if (has_floating_base_) {
+  //   d.dnu_passive = kkt_residual.lu_passive;
+  //   d.dnu_passive.noalias() += kkt_matrix.Quu_passive_topRight() * d.du();
+  //   d.dnu_passive.noalias() += kkt_matrix.Qxu_passive().transpose() * d.dx();
+  //   d.dnu_passive.noalias() 
+  //       += dt * data_.MJtJinv().leftCols(dimv_).template topRows<kDimFloatingBase>() * dgmm;
+  //   d.dnu_passive.array() *= - (1/dt);
+  // }
+  // data_.laf().noalias() += data_.Qafqv() * d.dx();
+  // data_.laf().noalias() += data_.Qafu() * d.du();
+  // data_.la().noalias() += dt * dgmm;
+  // d.dbetamu().noalias() = - data_.MJtJinv() * data_.laf() * (1/dt);
 }
 
 
 inline void ContactDynamics::condenseSwitchingConstraint(
     SplitKKTResidual& kkt_residual, SplitStateConstraintJacobian& jac) const {
-  jac.Phix().noalias() -= jac.Phia() * data_.MJtJinv_dIDCdqv().topRows(dimv_);
-  jac.Phiu().noalias()  
-    = jac.Phia() * data_.MJtJinv().block(0, dim_passive_, dimv_, dimu_);
-  kkt_residual.P().noalias() -= jac.Phia() * data_.MJtJinv_IDC().topRows(dimv_);
+  // jac.Phix().noalias() -= jac.Phia() * data_.MJtJinv_dIDCdqv().topRows(dimv_);
+  // jac.Phiu().noalias()  
+  //   = jac.Phia() * data_.MJtJinv().block(0, dim_passive_, dimv_, dimu_);
+  // kkt_residual.P().noalias() -= jac.Phia() * data_.MJtJinv_IDC().topRows(dimv_);
 }
 
 

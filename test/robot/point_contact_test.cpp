@@ -158,9 +158,9 @@ void PointContactTest::testBaumgarteResidual(pinocchio::Model& model, pinocchio:
   residual_ref.setZero();
   const double time_step = 0.5;
   const Eigen::Vector3d contact_point = Eigen::Vector3d::Random();
-  contact.computeBaumgarteResidual(model, data, time_step, contact_point, residual);
   const double baumgarte_weight_on_velocity = 2 / time_step;
   const double baumgarte_weight_on_position = 1 / (time_step*time_step);
+  contact.computeBaumgarteResidual(model, data, baumgarte_weight_on_velocity, baumgarte_weight_on_position, contact_point, residual);
   residual_ref 
       = pinocchio::getFrameClassicalAcceleration(model, data, contact_frame_id, 
                                                  pinocchio::LOCAL).linear()
@@ -172,7 +172,7 @@ void PointContactTest::testBaumgarteResidual(pinocchio::Model& model, pinocchio:
                  -contact_point);
   EXPECT_TRUE(residual.isApprox(residual_ref));
   Eigen::VectorXd residuals = Eigen::VectorXd::Zero(10);
-  contact.computeBaumgarteResidual(model, data, time_step, contact_point, residuals.segment<3>(5));
+  contact.computeBaumgarteResidual(model, data, baumgarte_weight_on_velocity, baumgarte_weight_on_position, contact_point, residuals.segment<3>(5));
   EXPECT_TRUE(residuals.head(5).isZero());
   EXPECT_TRUE(residuals.segment<3>(5).isApprox(residual_ref));
 }
@@ -193,8 +193,11 @@ void PointContactTest::testBaumgarteDerivative(pinocchio::Model& model, pinocchi
   Eigen::MatrixXd baum_partial_dv = Eigen::MatrixXd::Zero(3, dimv);
   Eigen::MatrixXd baum_partial_da = Eigen::MatrixXd::Zero(3, dimv);
   const double time_step = 0.5;
-  contact.computeBaumgarteDerivatives(model, data, time_step, baum_partial_dq, 
-                                      baum_partial_dv, baum_partial_da);
+  const double baumgarte_weight_on_velocity = 2 / time_step;
+  const double baumgarte_weight_on_position = 1 / (time_step*time_step);
+  contact.computeBaumgarteDerivatives(model, data, baumgarte_weight_on_velocity, 
+                                      baumgarte_weight_on_position, 
+                                      baum_partial_dq, baum_partial_dv, baum_partial_da);
   Eigen::MatrixXd baum_partial_dq_ref = Eigen::MatrixXd::Zero(3, dimv);
   Eigen::MatrixXd baum_partial_dv_ref = Eigen::MatrixXd::Zero(3, dimv);
   Eigen::MatrixXd baum_partial_da_ref = Eigen::MatrixXd::Zero(3, dimv);
@@ -219,12 +222,10 @@ void PointContactTest::testBaumgarteDerivative(pinocchio::Model& model, pinocchi
   v_angular_skew.setZero();
   pinocchio::skew(v_frame.linear(), v_linear_skew);
   pinocchio::skew(v_frame.angular(), v_angular_skew);
-  const double baumgarte_weight_on_velocity = 2 / time_step;
-  const double baumgarte_weight_on_position = 1 / (time_step*time_step);
   baum_partial_dq_ref 
       = frame_a_partial_dq.template topRows<3>()
           + v_angular_skew * frame_v_partial_dq.template topRows<3>()
-          + v_linear_skew * frame_v_partial_dq.template bottomRows<3>()
+          - v_linear_skew * frame_v_partial_dq.template bottomRows<3>()
           + baumgarte_weight_on_velocity 
               * frame_v_partial_dq.template topRows<3>()
           + baumgarte_weight_on_position 
@@ -233,7 +234,7 @@ void PointContactTest::testBaumgarteDerivative(pinocchio::Model& model, pinocchi
   baum_partial_dv_ref 
       = frame_a_partial_dv.template topRows<3>()
           + v_angular_skew * J_frame.template topRows<3>()
-          + v_linear_skew * J_frame.template bottomRows<3>()
+          - v_linear_skew * J_frame.template bottomRows<3>()
           + baumgarte_weight_on_velocity
               * frame_a_partial_da.template topRows<3>();
   baum_partial_da_ref 
@@ -241,6 +242,20 @@ void PointContactTest::testBaumgarteDerivative(pinocchio::Model& model, pinocchi
   EXPECT_TRUE(baum_partial_dq_ref.isApprox(baum_partial_dq));
   EXPECT_TRUE(baum_partial_dv_ref.isApprox(baum_partial_dv));
   EXPECT_TRUE(baum_partial_da_ref.isApprox(baum_partial_da));
+  std::cout << "baum_partial_dq_ref " << std::endl;
+  std::cout << baum_partial_dq_ref  << std::endl;
+  std::cout << "baum_partial_dv_ref " << std::endl;
+  std::cout << baum_partial_dv_ref  << std::endl;
+  std::cout << "baum_partial_dq" << std::endl;
+  std::cout << baum_partial_dq<< std::endl;
+  std::cout << "baum_partial_dv" << std::endl;
+  std::cout << baum_partial_dv<< std::endl;
+  std::cout << "baum_partial_dq_ref - baum_partial_dq" << std::endl;
+  std::cout << baum_partial_dq_ref - baum_partial_dq << std::endl;
+  std::cout << "baum_partial_dv_ref - baum_partial_dv" << std::endl;
+  std::cout << baum_partial_dv_ref - baum_partial_dv << std::endl;
+  // std::cout << "baum_partial_da_ref - baum_partial_da" << std::endl;
+  // std::cout << baum_partial_da_ref - baum_partial_da << std::endl;
 }
 
 

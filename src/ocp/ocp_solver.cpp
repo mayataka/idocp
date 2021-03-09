@@ -286,7 +286,8 @@ std::vector<Eigen::VectorXd> OCPSolver::getSolution(
 
 
 void OCPSolver::showInfo() const {
-  ocp_.discrete().showInfo();
+  ocp_.discrete().showInfo(contact_sequence_);
+  // ocp_.discrete().showInfo();
 }
 
 

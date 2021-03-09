@@ -97,6 +97,8 @@ public:
 
   void showInfo() const;
 
+  void showInfo(const ContactSequence& contact_sequence) const;
+
 private:
   double T_, dt_ideal_, max_dt_;
   int N_, N_ideal_, N_impulse_, N_lift_, max_events_;

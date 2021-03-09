@@ -53,9 +53,7 @@ inline void TerminalOCP::linearizeOCP(Robot& robot, const double t,
                                       SplitKKTMatrix& kkt_matrix, 
                                       SplitKKTResidual& kkt_residual) {
   kkt_residual.lx().setZero();
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v);
-  }
+  robot.updateKinematics(s.q, s.v);
   cost_->computeTerminalCostDerivatives(robot, cost_data_, t, s, kkt_residual);
   stateequation::linearizeForwardEulerTerminal(robot, q_prev, s, 
                                                kkt_matrix, kkt_residual);
@@ -80,9 +78,7 @@ inline double TerminalOCP::maxDualStepSize() {
 
 inline double TerminalOCP::terminalCost(Robot& robot, const double t, 
                                         const SplitSolution& s) {
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v);
-  }
+  robot.updateKinematics(s.q, s.v);
   return cost_->computeTerminalCost(robot, cost_data_, t, s);
 }
 
@@ -126,9 +122,7 @@ inline void TerminalOCP::computeKKTResidual(Robot& robot, const double t,
                                             SplitKKTMatrix& kkt_matrix,
                                             SplitKKTResidual& kkt_residual) {
   kkt_residual.lx().setZero();
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v);
-  }
+  robot.updateKinematics(s.q, s.v);
   cost_->computeTerminalCostDerivatives(robot, cost_data_, t, s, 
                                         kkt_residual);
   stateequation::linearizeForwardEulerTerminal(robot, q_prev, s, 

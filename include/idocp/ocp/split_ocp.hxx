@@ -73,9 +73,7 @@ inline void SplitOCP::linearizeOCP(Robot& robot,
   kkt_residual.setContactStatus(contact_status);
   kkt_matrix.setImpulseStatus();
   kkt_residual.setImpulseStatus();
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v, s.a);
-  }
+  robot.updateKinematics(s.q, s.v, s.a);
   kkt_matrix.setZero();
   kkt_residual.setZero();
   cost_->computeStageCostDerivatives(robot, cost_data_, t, dt, s, kkt_residual);
@@ -167,9 +165,7 @@ inline void SplitOCP::computeKKTResidual(Robot& robot,
   kkt_matrix.setImpulseStatus();
   kkt_residual.setImpulseStatus();
   kkt_residual.setZero();
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v, s.a);
-  }
+  robot.updateKinematics(s.q, s.v, s.a);
   cost_->computeStageCostDerivatives(robot, cost_data_, t, dt, s, kkt_residual);
   constraints_->computePrimalAndDualResidual(robot, constraints_data_, s);
   constraints_->augmentDualResidual(robot, constraints_data_, dt, s, kkt_residual);
@@ -209,9 +205,7 @@ inline double SplitOCP::stageCost(Robot& robot, const double t,
   assert(dt > 0);
   assert(primal_step_size >= 0);
   assert(primal_step_size <= 1);
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v, s.a);
-  }
+  robot.updateKinematics(s.q, s.v, s.a);
   double cost = 0;
   cost += cost_->computeStageCost(robot, cost_data_, t, dt, s);
   if (primal_step_size > 0) {
@@ -235,9 +229,7 @@ inline double SplitOCP::constraintViolation(Robot& robot,
   assert(dt > 0);
   kkt_residual.setContactStatus(contact_status);
   kkt_residual.setImpulseStatus();
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v, s.a);
-  }
+  robot.updateKinematics(s.q, s.v, s.a);
   constraints_->computePrimalAndDualResidual(robot, constraints_data_, s);
   stateequation::computeForwardEulerResidual(robot, dt, s, q_next, v_next, 
                                               kkt_residual);
@@ -263,9 +255,7 @@ inline double SplitOCP::constraintViolation(Robot& robot,
   assert(dt_next > 0);
   kkt_residual.setContactStatus(contact_status);
   kkt_residual.setImpulseStatus(impulse_status);
-  if (use_kinematics_) {
-    robot.updateKinematics(s.q, s.v, s.a);
-  }
+  robot.updateKinematics(s.q, s.v, s.a);
   constraints_->computePrimalAndDualResidual(robot, constraints_data_, s);
   stateequation::computeForwardEulerResidual(robot, dt, s, q_next, v_next, 
                                              kkt_residual);

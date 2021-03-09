@@ -201,7 +201,7 @@ inline void Robot::updateKinematics(
   pinocchio::forwardKinematics(model_, data_, q, v, a);
   pinocchio::updateFramePlacements(model_, data_);
   pinocchio::computeForwardKinematicsDerivatives(model_, data_, q, v, a);
-  pinocchio::jacobianCenterOfMass(model_, data_, false);
+  pinocchio::jacobianCenterOfMass(model_, data_, true);
 }
 
 
@@ -215,7 +215,7 @@ inline void Robot::updateKinematics(
   pinocchio::updateFramePlacements(model_, data_);
   pinocchio::computeForwardKinematicsDerivatives(model_, data_, q, v, 
                                                  Eigen::VectorXd::Zero(dimv_));
-  pinocchio::jacobianCenterOfMass(model_, data_, false);
+  pinocchio::jacobianCenterOfMass(model_, data_, true);
 }
 
 
@@ -225,7 +225,7 @@ inline void Robot::updateKinematics(
   assert(q.size() == dimq_);
   pinocchio::computeJointJacobians(model_, data_, q);
   pinocchio::framesForwardKinematics(model_, data_, q);
-  pinocchio::jacobianCenterOfMass(model_, data_, false);
+  pinocchio::jacobianCenterOfMass(model_, data_, true);
 }
 
 

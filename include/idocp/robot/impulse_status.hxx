@@ -144,6 +144,11 @@ ImpulseStatus::contactPoints() const {
 }
 
 
+inline const Eigen::Vector3d& ImpulseStatus::contactPoint(const int j) const {
+  return impulse_status_.contactPoint(j);
+}
+
+
 inline void ImpulseStatus::setRandom() {
   impulse_status_.setRandom();
 }
