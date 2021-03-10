@@ -146,7 +146,7 @@ void OCPSolver::setSolution(const std::string& name,
         e.set_f_stack(); 
       }
     }
-    else if (name == "flmd") {
+    else if (name == "lmd") {
       for (auto& e : s_.impulse) { 
         for (auto& ef : e.f) { ef = value; } 
         e.set_f_stack(); 

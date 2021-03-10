@@ -89,6 +89,53 @@ Robot::Robot(const std::string& path_to_urdf,
 }
 
 
+Robot::Robot(const std::string& path_to_urdf, 
+             const std::vector<int>& contact_frames, const bool verbose)
+  : model_(),
+    impulse_model_(),
+    data_(model_),
+    impulse_data_(impulse_model_),
+    point_contacts_(),
+    floating_base_(),
+    fjoint_(),
+    dimq_(0),
+    dimv_(0),
+    dimu_(0),
+    max_dimf_(0),
+    baumgarte_weight_on_velocity_(0), 
+    baumgarte_weight_on_position_(0),
+    dimpulse_dv_(),
+    joint_effort_limit_(),
+    joint_velocity_limit_(),
+    lower_joint_position_limit_(),
+    upper_joint_position_limit_(),
+    mat_3d_(Eigen::Matrix3d::Zero()) {
+  pinocchio::urdf::buildModel(path_to_urdf, pinocchio::JointModelFreeFlyer(), model_, verbose);
+  impulse_model_ = model_;
+  impulse_model_.gravity.linear().setZero();
+  data_ = pinocchio::Data(model_);
+  impulse_data_ = pinocchio::Data(impulse_model_);
+  for (int i=0; i<contact_frames.size(); ++i) {
+    point_contacts_.push_back(PointContact(model_, contact_frames[i]));
+    is_each_contact_active_.push_back(false);
+  }
+  max_dimf_ = 3 * point_contacts_.size();
+  fjoint_ = pinocchio::container::aligned_vector<pinocchio::Force>(
+                 model_.joints.size(), pinocchio::Force::Zero());
+  floating_base_ = FloatingBase(model_);
+  dimq_ = model_.nq;
+  dimv_ = model_.nv;
+  dimu_ = model_.nv - floating_base_.dim_passive();
+  data_.JMinvJt.resize(max_dimf_, max_dimf_);
+  data_.JMinvJt.setZero();
+  data_.sDUiJt.resize(dimv_, max_dimf_);
+  data_.sDUiJt.setZero();
+  dimpulse_dv_.resize(dimv_, dimv_);
+  dimpulse_dv_.setZero();
+  initializeJointLimits();
+}
+
+
 Robot::Robot()
   : model_(),
     impulse_model_(),

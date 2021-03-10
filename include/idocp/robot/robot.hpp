@@ -42,6 +42,10 @@ public:
   Robot(const std::string& path_to_urdf, 
         const std::vector<int>& contact_frames);
 
+  Robot(const std::string& path_to_urdf, 
+        const std::vector<int>& contact_frames,
+        const bool verbose);
+
   ///
   /// @brief Default constructor. 
   ///

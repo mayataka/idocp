@@ -131,6 +131,7 @@ double OCPLinearizer::KKTError(const OCP& ocp,
               kkt_residual.lift[lift_index], ocp.discrete().dt_lift(lift_index));
     }
   }
+  // std::cout << "KKT error = " << kkt_error_.head(N_all).transpose() << std::endl;
   return std::sqrt(kkt_error_.head(N_all).sum());
 }
 

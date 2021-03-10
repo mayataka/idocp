@@ -22,16 +22,16 @@ inline ParNMPCDiscretizer::ParNMPCDiscretizer(const double T, const int N,
     contact_phase_index_from_time_stage_(N+1, 0), 
     impulse_index_before_time_stage_(N, -1), 
     lift_index_before_time_stage_(N, -1), 
-    time_stage_after_impulse_(max_events, -1), 
-    time_stage_after_lift_(max_events, -1),
+    time_stage_after_impulse_(max_events+1, -1), 
+    time_stage_after_lift_(max_events+1, -1),
     is_time_stage_after_impulse_(N, false),
     is_time_stage_after_lift_(N, false),
     t_(N, 0),
-    t_impulse_(max_events, 0),
-    t_lift_(max_events, 0),
+    t_impulse_(max_events+1, 0),
+    t_lift_(max_events+1, 0),
     dt_(N, (double)(T/N)),
-    dt_aux_(max_events, 0),
-    dt_lift_(max_events, 0) {
+    dt_aux_(max_events+1, 0),
+    dt_lift_(max_events+1, 0) {
 }
 
 

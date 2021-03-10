@@ -20,16 +20,16 @@ inline OCPDiscretizer::OCPDiscretizer(const double T, const int N,
     contact_phase_index_from_time_stage_(N+1, 0), 
     impulse_index_after_time_stage_(N+1, -1), 
     lift_index_after_time_stage_(N+1, -1), 
-    time_stage_before_impulse_(max_events, -1), 
-    time_stage_before_lift_(max_events, -1),
+    time_stage_before_impulse_(max_events+1, -1), 
+    time_stage_before_lift_(max_events+1, -1),
     is_time_stage_before_impulse_(N+1, false),
     is_time_stage_before_lift_(N+1, false),
     t_(N+1, 0),
-    t_impulse_(max_events, 0),
-    t_lift_(max_events, 0),
+    t_impulse_(max_events+1, 0),
+    t_lift_(max_events+1, 0),
     dt_(N+1, static_cast<double>(T/N)),
-    dt_aux_(max_events, 0),
-    dt_lift_(max_events, 0) {
+    dt_aux_(max_events+1, 0),
+    dt_lift_(max_events+1, 0) {
 }
 
 
